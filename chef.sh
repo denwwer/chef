@@ -7,7 +7,7 @@ function help {
   exit 0
 }
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+if [ -z "$4" ]; then
     help
 fi
 
