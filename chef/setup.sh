@@ -21,11 +21,7 @@ fi
 
 echo "Apply chef $(date)"
 
-echo ""
-echo "======================================="
-echo "============ Update system ============"
-echo "======================================="
-echo ""
+echo_title 'Update system'
 
 sudo apt-get update -q=2
 
@@ -46,6 +42,7 @@ echo ""
 sudo ufw allow 22 # ssh
 sudo ufw allow 80 # http
 sudo ufw allow 443 # https
+sudo ufw allow 587 # smtp
 sudo ufw allow 2812 # monit
 sudo ufw default deny
 
