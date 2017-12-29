@@ -1,0 +1,72 @@
+###############################################################################
+## Monit control file
+###############################################################################
+  set daemon 60         # check services at 1-minute intervals
+  with start delay 240  # delay the first check by 4-minutes
+
+  set logfile /var/log/monit.log
+
+  set mailserver  port
+      username ""
+      password ""
+      using tlsv1
+      with timeout 10 seconds
+
+  set alert ohs.devs@gmail.com
+
+## By default Monit will drop alert events if no mail servers are available.
+## If you want to keep the alerts for later delivery retry, you can use the
+## EVENTQUEUE statement. The base directory where undelivered alerts will be
+## stored is specified by the BASEDIR option. You can limit the queue size
+## by using the SLOTS option (if omitted, the queue is limited by space
+## available in the back end filesystem).
+#
+  set eventqueue
+      basedir /var/lib/monit/events # set the base directory where events will be stored
+      slots 100                     # optionally limit the queue size
+
+
+## Monit mail-format
+  set mail-format {
+    from:    monit@server.com
+    subject: [$HOST ALERT] -- $EVENT $SERVICE
+    message: $EVENT Service $SERVICE
+                  Date:        $DATE
+                  Action:      $ACTION
+                  Host:        $HOST
+                  Description: $DESCRIPTION
+
+  }
+
+## HTTP interface
+  set httpd port 2812 and
+      use address localhost
+      allow localhost
+
+###############################################################################
+## Services
+###############################################################################
+
+# system
+ check system localhost
+   if loadavg (1min) > 4 then alert
+   if loadavg (5min) > 2 then alert
+   if cpu usage > 95% for 5 cycles then alert
+   if memory usage > 85% then alert
+   if swap usage > 25% then alert
+
+# nginx
+  check process nginx with pidfile /run/nginx.pid
+    start program = "/usr/bin/sudo /etc/init.d/nginx start" with timeout 10 seconds
+    stop program = "/usr/bin/sudo /etc/init.d/nginx stop"
+    if cpu > 90% for 2 cycles then alert
+    if cpu > 90% for 5 cycles then restart
+
+###############################################################################
+## Includes
+###############################################################################
+##
+## It is possible to include additional configuration parts from other files or
+## directories.
+#
+  include /etc/monit/conf.d/*
