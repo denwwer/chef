@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-# Ruby version to install via RVM
-RUBY_VERSION="2.5.0"
-
-# Node.js version
-NODE_VERSION="9.x"
+. ./ext/echo_title.sh
+. ./ufw/chef.sh
+. ./opendkim/chef.sh
+. ./postfix/chef.sh
+. ./ssh_key/chef.sh
+. ./rvm/chef.sh
+. ./nodejs/chef.sh
+. ./passenger/chef.sh
 
 # Deploy folder name
 APP_NAME="app"
@@ -42,136 +45,35 @@ echo_title 'Update system'
 
 sudo apt-get update -q=2
 
-echo ""
-echo "======================================="
-echo "========= Install dependencies ========"
-echo "======================================="
-echo ""
+echo_title 'Install dependencies'
 
 debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 
 sudo apt-get install -q=2 htop mc git redis-tools ufw vim nano opendkim opendkim-tools mailutils
 
-echo ""
-echo "======================================="
-echo "============ Configure UFW ============"
-echo "======================================="
-echo ""
-
-# More on https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands
-sudo ufw allow 22      # ssh
-sudo ufw allow 80      # http
-sudo ufw allow 443     # https
-sudo ufw allow 2812    # monit
-sudo ufw allow out 587 # SMTP
-sudo ufw allow out 25  # SMTP
-sudo ufw default deny
-
 if id deploy >/dev/null 2>&1; then
  	echo ""
 else
-	echo ""
-	echo "====================================="
-	echo "=========== Add deploy user ========="
-	echo "====================================="
-	echo ""
+  echo_title 'Add deploy user'
 
   sudo useradd --create-home -s /bin/bash deploy
 	sudo adduser deploy sudo
 	sudo passwd deploy
 fi
 
-echo "==========Configure  OpenDKIM=========="
-echo ""
+# ============================
+# ========== Chef's ==========
+# ============================
 
-# More on https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy#add-the-public-key-to-the-domain-39-s-dns-records
-sudo cat >> /etc/default/opendkim << EOF1
-SOCKET="inet:$OPENDKIM_SOCKET@localhost"
-EOF1
-
-sudo mkdir -p /etc/opendkim/keys/$DOMAIN_NAME
-cd /etc/opendkim/keys/$DOMAIN_NAME && sudo opendkim-genkey -s mail -d $DOMAIN_NAME
-chown -R opendkim:opendkim /etc/opendkim
-
-echo ""
-echo "======================================="
-echo "========== Configure Postfix =========="
-echo "======================================="
-echo ""
-
-sudo cat > /etc/postfix/header_checks << EOF1
-/^From:[[:space:]]+(.*)/ REPLACE From: Notifier $HOST_IP <notifier@server.com>
-EOF1
-
-cd /etc/postfix && sudo postmap header_checks
-
-# Person who should get root's mail
-echo "root:          $NOTIFIER_EMAIL" >> /etc/aliases
-sudo newaliases
-
-sudo postconf -e "inet_interfaces = loopback-only"
-sudo postconf -e "sender_canonical_maps = static:no-reply@<FQDN>"
-sudo postconf -e "smtp_header_checks = regexp:/etc/postfix/header_checks"
-sudo postconf -e "milter_protocol = 2"
-sudo postconf -e "milter_default_action = accept"
-sudo postconf -e "smtpd_milters = inet:localhost:$OPENDKIM_SOCKET"
-sudo postconf -e "non_smtpd_milters = inet:localhost:$OPENDKIM_SOCKET"
-
-sudo service postfix restart
-
-# Send test email to $NOTIFIER_EMAIL
-runuser -l deploy -c "echo 'Hello from Postfix' | mailx -s 'Postfix' $NOTIFIER_EMAIL"
-
-if [ ! -f /home/deploy/.ssh/authorized_keys ]; then
-  echo ""
-	echo "====================================="
-	echo "============ Add ssh key ============"
-	echo "====================================="
-	echo ""
-
-	sudo mkdir /home/deploy/.ssh
-  sudo chmod 700 /home/deploy/.ssh
-  sudo cp authorized_keys /home/deploy/.ssh/authorized_keys
-  sudo rm -f authorized_keys
-  sudo chmod 600 /home/deploy/.ssh/authorized_keys
-  sudo chown -R deploy /home/deploy/.ssh/authorized_keys
-fi
-
-echo ""
-echo "======================================="
-echo "============= Install RVM ============="
-echo "======================================="
-echo ""
-
-sudo -S -u deploy -i /bin/bash -l -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'
-sudo -S -u deploy -i /bin/bash -l -c "curl -sSL https://get.rvm.io | bash -s stable --ruby=$RUBY_VERSION"
-source /home/deploy/.rvm/scripts/rvm
-sudo -i -u deploy echo 'source /home/deploy/.rvm/scripts/rvm' >> /home/deploy/.bashrc
-sudo -S -u deploy -i /bin/bash -l -c "rvm use $RUBY_VERSION --default"
-sudo -S -u deploy -i /bin/bash -l -c 'gem install bundler'
-
-echo ""
-echo "======================================="
-echo "========== Install Passenger =========="
-echo "======================================="
-echo ""
-
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
-sudo apt-get install -y apt-transport-https ca-certificates
-sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main > /etc/apt/sources.list.d/passenger.list'
-sudo apt-get -q update
-sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 nginx-extras passenger'
-sudo /usr/bin/passenger-config validate-install
-
-echo ""
-echo "======================================="
-echo "=========== Install Node.js ==========="
-echo "======================================="
-echo ""
-
-sudo -S -u deploy -i /bin/bash -l -c "curl -sL https://deb.nodesource.com/setup_$NODE_VERSION | sudo -E bash -"
-sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 nodejs'
+chef_ssh_key
+chef_ufw
+chef_opendkim
+chef_postfix
+chef_rvm "2.5.0"
+chef_nodejs "9.x"
+# only one `chef_passenger` or `chef_nginx` should be used
+chef_passenger
 
 echo ""
 echo "======================================="

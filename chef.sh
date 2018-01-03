@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-. ./ext.sh
-
 
 function help {
   echo "Usage:"

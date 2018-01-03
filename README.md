@@ -1,4 +1,4 @@
-# Chef
+# Chef (Beta)
 
 Quick and simple server setup from raw Ubuntu image to production ready environment using pure Shell script, just run
 
