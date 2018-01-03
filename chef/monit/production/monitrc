@@ -6,13 +6,12 @@
 
   set logfile /var/log/monit.log
 
-  set mailserver  port
-      username ""
-      password ""
-      using tlsv1
+  # Use localhost for email alert delivery.
+  set mailserver localhost
       with timeout 10 seconds
 
-  set alert ohs.devs@gmail.com
+  # Replace `email@example.com` to your email
+  set alert email@example.com
 
 ## By default Monit will drop alert events if no mail servers are available.
 ## If you want to keep the alerts for later delivery retry, you can use the
@@ -46,8 +45,9 @@
 ###############################################################################
 ## Services
 ###############################################################################
+# More on https://mmonit.com/wiki/Monit/ConfigurationExamples
 
-# system
+# System
  check system localhost
    if loadavg (1min) > 4 then alert
    if loadavg (5min) > 2 then alert
@@ -55,12 +55,25 @@
    if memory usage > 85% then alert
    if swap usage > 25% then alert
 
-# nginx
+# Nginx
   check process nginx with pidfile /run/nginx.pid
     start program = "/usr/bin/sudo /etc/init.d/nginx start" with timeout 10 seconds
     stop program = "/usr/bin/sudo /etc/init.d/nginx stop"
     if cpu > 90% for 2 cycles then alert
     if cpu > 90% for 5 cycles then restart
+
+	check file nginx-error with path /var/log/nginx/error.log
+		if match "^timed out" then alert
+
+# Monitor Healthcheck URL of Web Application
+# Replace `example.com` to your domain
+#
+#	check host example.com with address example.com
+#		if failed
+#				port 443 type tcpSSL protocol http
+#			request "/status"
+#			for 5 times within 5 cycles
+#			then alert
 
 ###############################################################################
 ## Includes

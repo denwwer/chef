@@ -3,16 +3,33 @@
 # Ruby version to install via RVM
 RUBY_VERSION="2.5.0"
 
+# Node.js version
+NODE_VERSION="9.x"
+
 # Deploy folder name
 APP_NAME="app"
 
-# App environment provided by first argument
-APP_ENVIRONMENT=$1
+# Email address where send Monit alerts
+NOTIFIER_EMAIL="denwwer.c4@gmail.com"
 
-# Default tool name and his location
+# Domain name
+DOMAIN_NAME="mydomain.com"
+
+# OpenDKIM Socket
+OPENDKIM_SOCKET="56371"
+
+# Default tool name and his conf location
+# options:
+# -a   append to file
 CONFIGS="logrotate /etc/logrotate.d
 				 monit     /etc/monit
          nginx     /etc/nginx/sites-enabled"
+
+# Host IP
+HOST_IP="$(echo -e "$(hostname -I)" | tr -d '[:space:]')"
+
+# App environment provided by first argument
+APP_ENVIRONMENT=$1
 
 if [ -z "$1" ]; then
     echo 'APP_ENVIRONMENT argument is required'
@@ -35,7 +52,10 @@ echo "========= Install dependencies ========"
 echo "======================================="
 echo ""
 
-sudo apt-get install -q=2 htop mc git redis-tools ufw
+debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
+debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
+
+sudo apt-get install -q=2 htop mc git redis-tools ufw vim nano opendkim opendkim-tools mailutils
 
 echo ""
 echo "======================================="
@@ -43,10 +63,12 @@ echo "============ Configure UFW ============"
 echo "======================================="
 echo ""
 
-sudo ufw allow 22 # ssh
-sudo ufw allow 80 # http
-sudo ufw allow 443 # https
-sudo ufw allow 2812 # monit
+# More on https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands
+sudo ufw allow 22     # ssh
+sudo ufw allow 80     # http
+sudo ufw allow 443    # https
+sudo ufw allow 2812   # monit
+sudo ufw allow out 25 # SMTP out
 sudo ufw default deny
 
 if id deploy >/dev/null 2>&1; then
@@ -62,6 +84,47 @@ else
 	sudo adduser deploy sudo
 	sudo passwd deploy
 fi
+
+echo "==========Configure  OpenDKIM=========="
+echo ""
+
+# More on https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy#add-the-public-key-to-the-domain-39-s-dns-records
+sudo cat >> /etc/default/opendkim << EOF1
+SOCKET="inet:$OPENDKIM_SOCKET@localhost"
+EOF1
+
+sudo mkdir -p /etc/opendkim/keys/$DOMAIN_NAME
+cd /etc/opendkim/keys/$DOMAIN_NAME && sudo opendkim-genkey -s mail -d $DOMAIN_NAME
+chown -R opendkim:opendkim /etc/opendkim
+
+echo ""
+echo "======================================="
+echo "========== Configure Postfix =========="
+echo "======================================="
+echo ""
+
+sudo cat > /etc/postfix/header_checks << EOF1
+/^From:[[:space:]]+(.*)/ REPLACE From: Notifier $HOST_IP <notifier@server.com>
+EOF1
+
+cd /etc/postfix && sudo postmap header_checks
+
+# Person who should get root's mail
+echo "root:          $NOTIFIER_EMAIL" >> /etc/aliases
+sudo newaliases
+
+sudo postconf -e "inet_interfaces = loopback-only"
+sudo postconf -e "sender_canonical_maps = static:no-reply@<FQDN>"
+sudo postconf -e "smtp_header_checks = regexp:/etc/postfix/header_checks"
+sudo postconf -e "milter_protocol = 2"
+sudo postconf -e "milter_default_action = accept"
+sudo postconf -e "smtpd_milters = inet:localhost:$OPENDKIM_SOCKET"
+sudo postconf -e "non_smtpd_milters = inet:localhost:$OPENDKIM_SOCKET"
+
+sudo service postfix restart
+
+# Send test email to $NOTIFIER_EMAIL
+runuser -l deploy -c "echo 'Hello from Postfix' | mailx -s 'Postfix' $NOTIFIER_EMAIL"
 
 if [ ! -f /home/deploy/.ssh/authorized_keys ]; then
   echo ""
@@ -110,7 +173,7 @@ echo "=========== Install Node.js ==========="
 echo "======================================="
 echo ""
 
-sudo -S -u deploy -i /bin/bash -l -c 'curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -'
+sudo -S -u deploy -i /bin/bash -l -c "curl -sL https://deb.nodesource.com/setup_$NODE_VERSION | sudo -E bash -"
 sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 nodejs'
 
 echo ""
@@ -126,6 +189,7 @@ do
 	conf_array=( $conf )
 	name=${conf_array[0]}
 	path=${conf_array[1]}
+	append=${conf_array[2]}
 
 	echo "========= Configure $name"
 
@@ -138,8 +202,14 @@ do
 	for f in $files/*
 	do
 	  dest=$path/$(basename $f)
-	  echo "cp $f $dest"
-	  sudo -S -u deploy -i /bin/bash -l -c "sudo cp -rf $f $dest"
+
+	  if [ "$append" = "-a" ]; then
+	    echo "Append $f $dest"
+	    sudo -S -u deploy -i /bin/bash -l -c "cat $f >> $dest"
+	  else
+	  	echo "Replace $f $dest"
+	    sudo -S -u deploy -i /bin/bash -l -c "sudo cp -rf $f $dest"
+	  fi
 	done
 
 	echo ""
