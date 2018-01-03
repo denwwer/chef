@@ -38,11 +38,7 @@ fi
 
 echo "Apply chef $(date)"
 
-echo ""
-echo "======================================="
-echo "============ Update system ============"
-echo "======================================="
-echo ""
+echo_title 'Update system'
 
 sudo apt-get update -q=2
 
@@ -64,11 +60,12 @@ echo "======================================="
 echo ""
 
 # More on https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands
-sudo ufw allow 22     # ssh
-sudo ufw allow 80     # http
-sudo ufw allow 443    # https
-sudo ufw allow 2812   # monit
-sudo ufw allow out 25 # SMTP out
+sudo ufw allow 22      # ssh
+sudo ufw allow 80      # http
+sudo ufw allow 443     # https
+sudo ufw allow 2812    # monit
+sudo ufw allow out 587 # SMTP
+sudo ufw allow out 25  # SMTP
 sudo ufw default deny
 
 if id deploy >/dev/null 2>&1; then
