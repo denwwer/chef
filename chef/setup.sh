@@ -8,25 +8,19 @@
 . ./rvm/chef.sh
 . ./nodejs/chef.sh
 . ./passenger/chef.sh
+. ./monit/chef.sh
 
 # Deploy folder name
 APP_NAME="app"
 
 # Email address where send Monit alerts
-NOTIFIER_EMAIL="denwwer.c4@gmail.com"
+NOTIFIER_EMAIL="my@mail.com"
 
 # Domain name
 DOMAIN_NAME="mydomain.com"
 
 # OpenDKIM Socket
 OPENDKIM_SOCKET="56371"
-
-# Default tool name and his conf location
-# options:
-# -a   append to file
-CONFIGS="logrotate /etc/logrotate.d
-				 monit     /etc/monit
-         nginx     /etc/nginx/sites-enabled"
 
 # Host IP
 HOST_IP="$(echo -e "$(hostname -I)" | tr -d '[:space:]')"
@@ -74,45 +68,7 @@ chef_rvm "2.5.0"
 chef_nodejs "9.x"
 # only one `chef_passenger` or `chef_nginx` should be used
 chef_passenger
-
-echo ""
-echo "======================================="
-echo "============ Install Monit ============"
-echo "======================================="
-echo ""
-
-sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 monit'
-
-while read -r conf
-do
-	conf_array=( $conf )
-	name=${conf_array[0]}
-	path=${conf_array[1]}
-	append=${conf_array[2]}
-
-	echo "========= Configure $name"
-
-	files=$name
-
-	if [ -d $name/$APP_ENVIRONMENT ]; then
-	 files=$name/$APP_ENVIRONMENT
-	fi
-
-	for f in $files/*
-	do
-	  dest=$path/$(basename $f)
-
-	  if [ "$append" = "-a" ]; then
-	    echo "Append $f $dest"
-	    sudo -S -u deploy -i /bin/bash -l -c "cat $f >> $dest"
-	  else
-	  	echo "Replace $f $dest"
-	    sudo -S -u deploy -i /bin/bash -l -c "sudo cp -rf $f $dest"
-	  fi
-	done
-
-	echo ""
-done <<< "$CONFIGS"
+chef_monit
 
 echo ""
 echo "======================================="
