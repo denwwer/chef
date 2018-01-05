@@ -9,6 +9,7 @@
 . ./nodejs/chef.sh
 . ./passenger/chef.sh
 . ./monit/chef.sh
+. ./logrotate/chef.sh
 
 # Deploy folder name
 APP_NAME="app"
@@ -62,13 +63,14 @@ fi
 
 chef_ssh_key
 chef_ufw
-chef_opendkim
 chef_postfix
+chef_opendkim
 chef_rvm "2.5.0"
 chef_nodejs "9.x"
 # only one `chef_passenger` or `chef_nginx` should be used
-chef_passenger
+chef_passenger "ssl"
 chef_monit
+chef_logrotate
 
 echo ""
 echo "======================================="

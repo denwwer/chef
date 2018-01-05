@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ././../ext/echo_title.sh
+. "$(pwd)/ext/echo_title.sh"
 
 # ARG
 # $1 - Node.js version

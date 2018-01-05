@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-. ././../ext/echo_title.sh
+
+. "$(pwd)/ext/echo_title.sh"
 
 function chef_ufw {
 	echo_title 'Configure UFW'

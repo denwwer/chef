@@ -26,8 +26,8 @@ function append_conf {
 # $1 - Config name
 # $2 - Source file
 function _path {
-	local file=./../$1/$2
-	local file_with_env=./../$1/$APP_ENVIRONMENT/$2
+	local file="$(pwd)/$1/$2"
+	local file_with_env="$(pwd)/$1/$APP_ENVIRONMENT/$2"
 
 	if [ -d $file_with_env ]; then
 	 file=$file_with_env
