@@ -20,9 +20,9 @@ function chef_opendkim {
 	sudo mkdir -p /etc/opendkim/keys/$DOMAIN_NAME
 	cd /etc/opendkim/keys/$DOMAIN_NAME && sudo opendkim-genkey -s mail -d $DOMAIN_NAME
 
-	copy_conf "opendkim" "key_table" "/etc/opendkim/"
-	copy_conf "opendkim" "signing_table" "/etc/opendkim/"
-	copy_conf "opendkim" "trusted_hosts" "/etc/opendkim/"
+	copy "opendkim" "key_table" "/etc/opendkim/"
+	copy "opendkim" "signing_table" "/etc/opendkim/"
+	copy "opendkim" "trusted_hosts" "/etc/opendkim/"
 
 	append_conf "opendkim" "opendkim.conf" "/etc/opendkim.conf"
 

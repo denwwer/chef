@@ -28,15 +28,17 @@ function chef_nginx {
   for f in nginx/snippets/*
 	do
 	  local file=$(basename $f)
-	  copy_conf "nginx/snippets" $file "/etc/nginx/snippets/$file"
+	  copy "nginx/snippets" $file "/etc/nginx/snippets/$file"
 	done
 
   # Node.js Proxy
 	if [ -z "$2" ]; then
 		if [ "$1" == "ssl" ]; then
-			copy_conf "nginx" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
+			copy "nginx" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
 		else
-		  copy_conf "nginx" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
+		  copy "nginx" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
 		fi
+
+		sudo service nginx restart
 	fi
 }

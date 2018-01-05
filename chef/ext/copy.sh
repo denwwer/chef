@@ -4,7 +4,7 @@
 # $1 - Config name
 # $2 - Source file
 # $3 - Desc path
-function copy_conf {
+function copy {
   local source=$(_path $1 $2)
 
   echo "Copy $source to $3"
@@ -15,7 +15,7 @@ function copy_conf {
 # $1 - Config name
 # $2 - Source file
 # $3 - Desc path
-function append_conf {
+function append {
   local source=$(_path $1 $2)
 
   echo "Append $source to $3"

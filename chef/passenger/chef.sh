@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 . "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/copy.sh"
 . "$(pwd)/nginx/chef.sh"
 
 # ARG
@@ -18,8 +19,10 @@ function chef_passenger {
 	sudo /usr/bin/passenger-config validate-install
 
 	if [ "$1" == "ssl" ]; then
-		copy_conf "passenger" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
+		copy "passenger" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
 	else
-	  copy_conf "passenger" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
+	  copy "passenger" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
 	fi
+
+	sudo service nginx restart
 }

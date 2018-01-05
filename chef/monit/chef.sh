@@ -8,5 +8,5 @@ function chef_monit {
   sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 monit'
 
   echo_title 'Configure Monit'
-  copy_conf "monit" "monitrc" "/etc/monit/monitrc"
+  copy "monit" "monitrc" "/etc/monit/monitrc"
 }
