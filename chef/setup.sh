@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# TODO: make this dynamically
 . ./ext/echo_title.sh
 . ./ufw/chef.sh
 . ./opendkim/chef.sh
@@ -10,11 +11,12 @@
 . ./passenger/chef.sh
 . ./monit/chef.sh
 . ./logrotate/chef.sh
+. ./letsencrypt/chef.sh
 
 # Deploy folder name
 APP_NAME="app"
 
-# Email address where send Monit alerts
+# Email address where send alerts from Monit|System
 NOTIFIER_EMAIL="my@mail.com"
 
 # Domain name
@@ -67,8 +69,9 @@ chef_postfix
 chef_opendkim
 chef_rvm "2.5.0"
 chef_nodejs "9.x"
-# only one `chef_passenger` or `chef_nginx` should be used
+# Only one `chef_passenger` or `chef_nginx` should be used
 chef_passenger "ssl"
+chef_letsencrypt "my@mail.com"
 chef_monit
 chef_logrotate
 
