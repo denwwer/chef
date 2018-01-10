@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 
 #TODO: add config
 
@@ -10,12 +10,12 @@
 # ARG
 # $1 - your@email.com | opts out of signing up for the EFF mailing list
 function chef_letsencrypt {
-  echo_title "Configure LetsEncrypt"
+  title "Configure LetsEncrypt"
 
-	sudo apt-get install -y -q-2 software-properties-common
-	sudo add-apt-repository ppa:certbot/certbot
-	sudo apt-get -y -q-2 update
-	sudo apt-get install -y -q-2 certbot
+	sudo apt-get install -q=2 software-properties-common
+	sudo add-apt-repository -y ppa:certbot/certbot
+	sudo apt-get -q=2 update
+	sudo apt-get install -q=2 certbot
 
 	local www_domaim="www.$DOMAIN_NAME"
 
@@ -27,5 +27,5 @@ function chef_letsencrypt {
 
   ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 
-	echo_title "Check SLL rating on https://www.ssllabs.com/ssltest/analyze.html?d=$DOMAIN_NAME"
+	echo "Check SLL rating on https://www.ssllabs.com/ssltest/analyze.html?d=$DOMAIN_NAME"
 }

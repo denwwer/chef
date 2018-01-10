@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
-. "$(pwd)/ext/conf_operations.sh"
+. "$(pwd)/ext/title.sh"
+. "$(pwd)/ext/copy.sh"
 
 # ARG
 # $1 - OpenDKIM Socket
 # $2 - Domain name
 function chef_opendkim {
-  echo_title 'Configure  OpenDKIM'
+  title 'Configure  OpenDKIM'
 	# More on https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy#add-the-public-key-to-the-domain-39-s-dns-records
 
 	sudo postconf -e "milter_protocol = 2"
@@ -19,6 +19,7 @@ function chef_opendkim {
 
 	sudo mkdir -p /etc/opendkim/keys/$DOMAIN_NAME
 	cd /etc/opendkim/keys/$DOMAIN_NAME && sudo opendkim-genkey -s mail -d $DOMAIN_NAME
+	cd -
 
 	copy "opendkim" "key_table" "/etc/opendkim/"
 	copy "opendkim" "signing_table" "/etc/opendkim/"

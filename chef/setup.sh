@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO: make this dynamically
-. ./ext/echo_title.sh
+. ./ext/title.sh
 . ./ufw/chef.sh
 . ./opendkim/chef.sh
 . ./postfix/chef.sh
@@ -36,23 +36,27 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
-echo "Apply chef $(date)"
-
-echo_title 'Update system'
+title 'Start'
+title "Environment $APP_ENVIRONMENT"
+title 'Update system'
 
 sudo apt-get update -q=2
 
-echo_title 'Install dependencies'
+title 'Install dependencies'
 
+debconf-set-selections <<< "debconf debconf/frontend select Noninteractive"
 debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 
 sudo apt-get install -q=2 htop mc git redis-tools ufw vim nano opendkim opendkim-tools mailutils
 
+# for test
+sudo apt-get install -q=2 debconf-utils
+
 if id deploy >/dev/null 2>&1; then
  	echo ""
 else
-  echo_title 'Add deploy user'
+  title 'Add deploy user'
 
   sudo useradd --create-home -s /bin/bash deploy
 	sudo adduser deploy sudo

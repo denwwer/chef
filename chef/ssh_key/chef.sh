@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 
 function chef_ssh_key {
 	if [ ! -f /home/deploy/.ssh/authorized_keys ]; then
-	  echo_title 'Add SSH key'
+	  title 'Add SSH key'
 
 	  local auth_keys="$(pwd)/authorized_keys"
 

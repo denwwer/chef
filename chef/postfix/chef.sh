@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 
 function chef_postfix {
-	echo_title 'Configure Postfix'
+	title 'Configure Postfix'
 
 sudo cat > /etc/postfix/header_checks << EOF1
 /^From:[[:space:]]+(.*)/ REPLACE From: Notifier $HOST_IP <notifier@server.com>
 EOF1
 
 	cd /etc/postfix && sudo postmap header_checks
+	cd -
 
 	# Person who should get root's mail
 	echo "root:          $NOTIFIER_EMAIL" >> /etc/aliases

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 . "$(pwd)/ext/copy.sh"
 
 # ARG
 # $1 - ssl|aws
 # $2 - passenger|[skip]
 function chef_nginx {
-	echo_title "Install Nginx"
+	title "Install Nginx"
 
 	if [ "$2" == "passenger" ]; then
 		sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 nginx-extras passenger'
@@ -15,7 +15,7 @@ function chef_nginx {
 	  sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 nginx'
 	fi
 
-	echo_title 'Configure Nginx'
+	title 'Configure Nginx'
 
   # Key Exchange
 	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048

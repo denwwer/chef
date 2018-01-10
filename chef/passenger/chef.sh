@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 . "$(pwd)/ext/copy.sh"
 . "$(pwd)/nginx/chef.sh"
 
 # ARG
 # $1 - ssl|aws
 function chef_passenger {
-	echo_title "Install Passenger with Nginx"
+	title "Install Passenger with Nginx"
 
 	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
 	sudo apt-get install -y apt-transport-https ca-certificates
@@ -16,7 +16,7 @@ function chef_passenger {
 
 	chef_nginx $1 "passenger"
 
-	sudo /usr/bin/passenger-config validate-install
+	sudo /usr/bin/passenger-config validate-install --auto
 
 	if [ "$1" == "ssl" ]; then
 		copy "passenger" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"

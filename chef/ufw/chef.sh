@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-. "$(pwd)/ext/echo_title.sh"
+. "$(pwd)/ext/title.sh"
 
 function chef_ufw {
-	echo_title 'Configure UFW'
+	title 'Configure UFW'
 
 	# More on https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands
 	sudo ufw allow 22      # ssh
