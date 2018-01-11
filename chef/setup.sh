@@ -13,6 +13,10 @@
 . ./logrotate/chef.sh
 . ./letsencrypt/chef.sh
 
+# ============================
+# ========== Config ==========
+# ============================
+
 # Deploy folder name
 APP_NAME="app"
 
@@ -24,6 +28,8 @@ DOMAIN_NAME="mydomain.com"
 
 # OpenDKIM Socket
 OPENDKIM_SOCKET="56371"
+
+# ============ END ============
 
 # Host IP
 HOST_IP="$(echo -e "$(hostname -I)" | tr -d '[:space:]')"
@@ -71,15 +77,15 @@ fi
 # ========== Chef's ==========
 # ============================
 
+# Easily add or remove chef function to manage
 chef_ssh_key
 chef_ufw
 chef_postfix
 chef_opendkim
 chef_rvm "2.5.0"
 chef_nodejs "9.x"
-# Only one `chef_passenger` or `chef_nginx` should be used,
-# because `chef_passenger` include Nginx as well
-chef_passenger "ssl"
+# Only one `chef_passenger` (Passenger include Nginx) or `chef_nginx` should be used,
+chef_passenger "https"
 chef_letsencrypt "my@mail.com"
 chef_monit
 chef_logrotate

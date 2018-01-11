@@ -4,7 +4,10 @@
 . "$(pwd)/ext/copy.sh"
 
 # ARG
-# $1 - ssl|aws
+# $1 http|https|aws
+#   http  - standalone config (default)
+#   https - standalone SSL config
+#   aws   - AWS config
 # $2 - passenger|[skip]
 function chef_nginx {
 	title "Install Nginx"
@@ -17,11 +20,10 @@ function chef_nginx {
 
 	title 'Configure Nginx'
 
-  # Key Exchange
+  # SSL Key Exchange
 	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 >/dev/null 2>&1
 
-  # TODO: move this to chef_letsencrypt?
-	# LetsEncrypt
+	# LetsEncrypt preseed
   sudo mkdir -p /var/www/letsencrypt/.well-known/acme-challenge
 
   # Snippets
@@ -33,10 +35,10 @@ function chef_nginx {
 
   # Node.js Proxy
 	if [ -z "$2" ]; then
-		if [ "$1" == "ssl" ]; then
+		if [ "$1" == "https" ]; then
 			copy "nginx" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
 		else
-		  copy "nginx" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
+		  copy "nginx" "app.conf" "/etc/nginx/sites-enabled/app.conf"
 		fi
 	fi
 

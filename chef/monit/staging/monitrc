@@ -10,7 +10,8 @@
   set mailserver localhost
       with timeout 10 seconds
 
-  set alert ohs.devs@gmail.com
+  # Replace `email@example.com` to your email
+  set alert email@example.com
 
 ## By default Monit will drop alert events if no mail servers are available.
 ## If you want to keep the alerts for later delivery retry, you can use the

@@ -2,6 +2,7 @@
 
 . "$(pwd)/ext/title.sh"
 
+# Setup UFW firewall
 function chef_ufw {
 	title 'Configure UFW'
 

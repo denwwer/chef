@@ -2,9 +2,16 @@
 
 . "$(pwd)/ext/title.sh"
 
+# Install RVM with Ruby
+#
 # ARG
 # $1 - Ruby version
 function chef_rvm {
+	if [ -z "$1" ]; then
+	    title "[ERROR] Ruby version is required"
+	    exit 0
+	fi
+
 	title "Install RVM with Ruby $1"
 
 	sudo -S -u deploy -i /bin/bash -l -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'

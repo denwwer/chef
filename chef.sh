@@ -2,7 +2,12 @@
 
 function help {
   echo "Usage:"
-  echo "  ./chef.sh user@host key.pub chef_path app_environment"
+  echo "  ./chef.sh [user@host] [key.pub] [/chef] [environment]"
+  echo ""
+  echo "   [user@host]     - user and host for connect to remote server"
+  echo "   [key.pub]       - local path to public SSH key"
+  echo "   [chef/path]     - path where save chef's on remote server"
+  echo "   [environment]   - app enviroment to use"
   exit 0
 }
 

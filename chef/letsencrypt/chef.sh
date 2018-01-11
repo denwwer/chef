@@ -2,14 +2,17 @@
 
 . "$(pwd)/ext/title.sh"
 
-#TODO: add config
-
-# Get the certificate from LetsEncrypt
-# It will save the files in /etc/letsencrypt/live/www.mydomain.com/.
+# Get the SSL/TLS certificate from LetsEncrypt
+# will save the files in /etc/letsencrypt/live/www.mydomain.com
 #
 # ARG
 # $1 - your@email.com | opts out of signing up for the EFF mailing list
 function chef_letsencrypt {
+	if [ -z "$1" ]; then
+	    title "[ERROR] email is required"
+	    exit 0
+	fi
+
   title "Configure LetsEncrypt"
 
 	sudo apt-get install -q=2 software-properties-common

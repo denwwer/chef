@@ -2,6 +2,7 @@
 
 . "$(pwd)/ext/title.sh"
 
+# Add SSH pub.key to deploy user
 function chef_ssh_key {
 	if [ ! -f /home/deploy/.ssh/authorized_keys ]; then
 	  title 'Add SSH key'

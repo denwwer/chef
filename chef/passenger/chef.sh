@@ -4,8 +4,13 @@
 . "$(pwd)/ext/copy.sh"
 . "$(pwd)/nginx/chef.sh"
 
+# Install Passenger with Nginx
+#
 # ARG
-# $1 - ssl|aws
+# $1 http|https|aws
+#   http  - standalone config (default)
+#   https - standalone SSL config
+#   aws   - AWS config
 function chef_passenger {
 	title "Install Passenger with Nginx"
 
@@ -19,10 +24,14 @@ function chef_passenger {
 
 	sudo /usr/bin/passenger-config validate-install --auto
 
-	if [ "$1" == "ssl" ]; then
-		copy "passenger" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
-	else
+	if [ "$1" == "aws" ]; then
 	  copy "passenger" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
+	else
+		if [ "$1" == "https" ]; then
+			copy "passenger" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"
+		else
+		  copy "passenger" "app.conf" "/etc/nginx/sites-enabled/app.conf"
+		fi
 	fi
 
 	local conf=$(cat /etc/nginx/nginx.conf | grep "# include /etc/nginx/passenger.conf")

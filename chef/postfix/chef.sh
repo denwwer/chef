@@ -2,6 +2,8 @@
 
 . "$(pwd)/ext/title.sh"
 
+# Install Postfix for send notification to developers
+# for example System notification, Monit, etc
 function chef_postfix {
 	title 'Configure Postfix'
 

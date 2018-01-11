@@ -3,6 +3,7 @@
 . "$(pwd)/ext/title.sh"
 . "$(pwd)/ext/copy.sh"
 
+# Configure Logrotate
 function chef_logrotate {
 	title 'Configure Logrotate'
 
