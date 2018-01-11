@@ -8,7 +8,7 @@ chmod 777 chef.sh
 ```
 
 Usage:
-* check file `chef/setup.sh` "Config" section and "Chef's" for customization
+* check file `chef/setup.sh` "*Config*" section and "*Chef's*" for customization
 * check chef's files in `chef/*` directory to customize each configurations
 * run:
 ```
