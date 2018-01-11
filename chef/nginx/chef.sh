@@ -38,7 +38,11 @@ function chef_nginx {
 		else
 		  copy "nginx" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
 		fi
+	fi
 
+	nginx -t
+
+	if [ -z "$2" ]; then
 		sudo service nginx restart
 	fi
 }

@@ -13,6 +13,6 @@ function chef_ssh_key {
 	  sudo cp $auth_keys /home/deploy/.ssh/authorized_keys
 	  sudo rm -f $auth_keys
 	  sudo chmod 600 /home/deploy/.ssh/authorized_keys
-	  sudo chown -R deploy /home/deploy/.ssh/authorized_keys
+	  sudo chown -R deploy /home/deploy/.ssh
 	fi
 }

@@ -44,6 +44,9 @@ sudo apt-get update -q=2
 
 title 'Install dependencies'
 
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
 debconf-set-selections <<< "debconf debconf/frontend select Noninteractive"
 debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
@@ -80,16 +83,3 @@ chef_passenger "ssl"
 chef_letsencrypt "my@mail.com"
 chef_monit
 chef_logrotate
-
-echo ""
-echo "======================================="
-echo "========== Post installation =========="
-echo "======================================="
-echo ""
-echo " * sudo visudo"
-echo "   add 'deploy ALL=NOPASSWD: /usr/bin/monit*, /etc/monit/monitrc, /bin/cp, /bin/mv'"
-echo ""
-echo " * sudo nano /etc/nginx/nginx.conf"
-echo "   set ' access_log off; '"
-echo "   uncomment ' # include /etc/nginx/passenger.conf; '"
-echo "   sudo service nginx restart"

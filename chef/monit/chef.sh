@@ -8,5 +8,10 @@ function chef_monit {
   sudo -S -u deploy -i /bin/bash -l -c 'sudo apt-get install -q=2 monit'
 
   title 'Configure Monit'
+
+  copy "monit" "nginx" "/etc/monit/conf.d/nginx"
+  copy "monit" "healthcheck" "/etc/monit/conf.d/healthcheck"
   copy "monit" "monitrc" "/etc/monit/monitrc"
+
+  monit status
 }
