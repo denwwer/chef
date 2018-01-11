@@ -53,6 +53,7 @@ sudo apt-get install -q=2 htop mc git redis-tools ufw vim nano opendkim opendkim
 # for test
 sudo apt-get install -q=2 debconf-utils
 
+# TODO: add deploy user password to debconf
 if id deploy >/dev/null 2>&1; then
  	echo ""
 else
@@ -73,7 +74,8 @@ chef_postfix
 chef_opendkim
 chef_rvm "2.5.0"
 chef_nodejs "9.x"
-# Only one `chef_passenger` or `chef_nginx` should be used
+# Only one `chef_passenger` or `chef_nginx` should be used,
+# because `chef_passenger` include Nginx as well
 chef_passenger "ssl"
 chef_letsencrypt "my@mail.com"
 chef_monit

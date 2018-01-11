@@ -13,4 +13,5 @@ function chef_rvm {
 	sudo -i -u deploy echo 'source /home/deploy/.rvm/scripts/rvm' >> /home/deploy/.bashrc
 	sudo -S -u deploy -i /bin/bash -l -c "rvm use $1 --default"
 	sudo -S -u deploy -i /bin/bash -l -c 'gem install bundler --no-rdoc --no-ri'
+	ln -sf /home/deploy/.rvm/gems/ruby-$1/wrappers/ruby /home/deploy/ruby
 }

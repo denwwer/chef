@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function title {
   local blue='\033[1;34m'
   local nc='\033[0m' # No Color

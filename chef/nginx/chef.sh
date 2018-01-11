@@ -18,7 +18,7 @@ function chef_nginx {
 	title 'Configure Nginx'
 
   # Key Exchange
-	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 >/dev/null 2>&1
 
   # TODO: move this to chef_letsencrypt?
 	# LetsEncrypt

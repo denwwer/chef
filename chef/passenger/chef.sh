@@ -14,6 +14,7 @@ function chef_passenger {
 	sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main > /etc/apt/sources.list.d/passenger.list'
 	sudo apt-get -q update
 
+  # Apply Nginx chef's
 	chef_nginx $1 "passenger"
 
 	sudo /usr/bin/passenger-config validate-install --auto
@@ -23,6 +24,11 @@ function chef_passenger {
 	else
 	  copy "passenger" "app.aws.conf" "/etc/nginx/sites-enabled/app.conf"
 	fi
+
+	local conf=$(cat /etc/nginx/nginx.conf | grep "# include /etc/nginx/passenger.conf")
+
+  # Uncomment Passenger config
+	sudo sed -i -r 's/# (include.*passenger\.conf)/\1/' /etc/nginx/nginx.conf
 
 	sudo service nginx restart
 }
