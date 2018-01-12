@@ -1,0 +1,4 @@
+# Filesystem
+# Change `/` to your mounted path
+check device "root" with path /
+    if space usage > 80% for 2 cycles then alert
