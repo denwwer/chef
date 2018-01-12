@@ -13,6 +13,8 @@ function chef_monit {
 
   copy "monit" "nginx" "/etc/monit/conf.d/nginx"
   copy "monit" "healthcheck" "/etc/monit/conf.d/healthcheck"
+  copy "monit" "filesystem" "/etc/monit/conf.d/filesystem"
+  copy "monit" "postfix" "/etc/monit/conf.d/postfix"
   copy "monit" "monitrc" "/etc/monit/monitrc"
 
   monit status
