@@ -1,6 +1,7 @@
 # Chef
 
-Fast and simple way to setup server from raw Ubuntu image to production ready environment using pure Shell script, just run:
+Fast and simple way to setup server from raw Ubuntu image to production ready
+[environment](https://github.com/denwwer/chef/tree/master/chef) whit using pure Shell script, just run:
 
 ```
 chmod 777 chef.sh
@@ -8,7 +9,7 @@ chmod 777 chef.sh
 ```
 
 Usage:
-* check file `chef/setup.sh` "Config" section and "Chef's" for customization
+* check file `chef/setup.sh` "*Config*" section and "*Chef's*" for customization
 * check chef's files in `chef/*` directory to customize each configurations
 * run:
 ```
