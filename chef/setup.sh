@@ -12,6 +12,7 @@
 . ./monit/chef.sh
 . ./logrotate/chef.sh
 . ./letsencrypt/chef.sh
+. ./db/chef.sh
 
 # ============================
 # ========== Config ==========
