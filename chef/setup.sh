@@ -86,3 +86,4 @@ chef_passenger "https"
 chef_letsencrypt "my@mail.com"
 chef_monit
 chef_logrotate
+chef_db 'postgresql'
