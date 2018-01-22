@@ -20,7 +20,7 @@ function chef_nginx {
 
 	title 'Configure Nginx'
 
-  # SSL Key Exchange
+	title 'Generate SSL Key Exchange'
 	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 >/dev/null 2>&1
 
 	# LetsEncrypt preseed
@@ -33,7 +33,7 @@ function chef_nginx {
 	  copy "nginx/snippets" $file "/etc/nginx/snippets/$file"
 	done
 
-  # Node.js Proxy
+  # if not Passenger then Proxy (for Node.js) config will be user
 	if [ -z "$2" ]; then
 		if [ "$1" == "https" ]; then
 			copy "nginx" "app.ssl.conf" "/etc/nginx/sites-enabled/app.ssl.conf"

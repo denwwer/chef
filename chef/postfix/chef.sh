@@ -8,7 +8,7 @@ function chef_postfix {
 	title 'Configure Postfix'
 
 sudo cat > /etc/postfix/header_checks << EOF1
-/^From:[[:space:]]+(.*)/ REPLACE From: Notifier $HOST_IP <notifier@server.com>
+/^From:[[:space:]]+(.*)/ REPLACE From: Notifier $(hostname) <notifier@server.com>
 EOF1
 
 	cd /etc/postfix && sudo postmap header_checks
@@ -24,6 +24,7 @@ EOF1
 
 	sudo service postfix restart
 
-	# Send test email to $NOTIFIER_EMAIL
+	info "Send test email to $NOTIFIER_EMAIL, check your inbox/spam folder"
+	info "For enable DKIM sender authentication system, check chef/opendkim"
 	runuser -l deploy -c "echo 'Hello from Postfix' | mailx -s 'Postfix' $NOTIFIER_EMAIL"
 }

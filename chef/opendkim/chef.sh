@@ -4,7 +4,7 @@
 . "$(pwd)/ext/copy.sh"
 
 # Add OpenDKIM
-# More on https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy#add-the-public-key-to-the-domain-39-s-dns-records
+# First read https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy#add-the-public-key-to-the-domain-39-s-dns-records
 #
 # ARG
 # $1 - OpenDKIM Socket

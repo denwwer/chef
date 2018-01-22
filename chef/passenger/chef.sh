@@ -36,8 +36,8 @@ function chef_passenger {
 
 	local conf=$(cat /etc/nginx/nginx.conf | grep "# include /etc/nginx/passenger.conf")
 
-  # Uncomment Passenger config
+  title "Enable Passenger"
 	sudo sed -i -r 's/# (include.*passenger\.conf)/\1/' /etc/nginx/nginx.conf
-
+	nginx -t
 	sudo service nginx restart
 }

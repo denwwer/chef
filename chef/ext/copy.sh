@@ -8,7 +8,6 @@ function copy {
   local source=$(_path $1 $2)
 
   _print "Copy $source to $3"
-
   sudo -S -u deploy -i /bin/bash -l -c "sudo cp -rf $source $3"
 }
 

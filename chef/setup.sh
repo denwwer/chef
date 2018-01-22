@@ -31,9 +31,6 @@ OPENDKIM_SOCKET="56371"
 
 # ============ END ============
 
-# Host IP
-HOST_IP="$(echo -e "$(hostname -I)" | tr -d '[:space:]')"
-
 # App environment provided by first argument
 APP_ENVIRONMENT=$1
 
@@ -42,7 +39,7 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
-title 'Start'
+title "Chef's Start"
 title "Environment $APP_ENVIRONMENT"
 title 'Update system'
 
@@ -50,8 +47,8 @@ sudo apt-get update -q=2
 
 title 'Install dependencies'
 
-export LC_ALL=en_US.UTF-8
-export LC_CTYPE=en_US.UTF-8
+# Set default locale
+localedef -i en_US -f UTF-8 en_US.UTF-8
 
 debconf-set-selections <<< "debconf debconf/frontend select Noninteractive"
 debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
