@@ -9,8 +9,8 @@
 # $1 - your@email.com | opts out of signing up for the EFF mailing list
 function chef_letsencrypt {
 	if [ -z "$1" ]; then
-	    title "[ERROR] email is required"
-	    exit 0
+    title "[ERROR] email is required"
+    exit 0
 	fi
 
   title "Configure LetsEncrypt"
@@ -20,9 +20,10 @@ function chef_letsencrypt {
 	sudo apt-get -q=2 update
 	sudo apt-get install -q=2 certbot
 
-	local www_domaim="www.$DOMAIN_NAME"
+	local www_domain="www.$DOMAIN_NAME"
 
-	sudo certbot certonly --nginx --webroot --agree-tos --no-eff-email --email $1 -w /var/www/letsencrypt -d www_domaim -d $DOMAIN_NAME
+  # sudo certbot certonly --webroot --agree-tos --no-eff-email --email $1 -w /var/www/letsencrypt -d $www_domain -d $DOMAIN_NAME
+	sudo certbot certonly --nginx --webroot --agree-tos --no-eff-email --email $1 -w /var/www/letsencrypt -d $www_domain -d $DOMAIN_NAME
   sudo certbot renew --dry-run
 
   local croncmd="Automatic renewal LetsEncrypt"

@@ -8,12 +8,12 @@
 # $1 DB hostname. One of
 #   - postgresql
 function chef_db {
-    if [ -z "$1" ]; then
-	    title "[ERROR] DB is not specified. Valid are: ['postgresql']"
-	    exit 0
-	fi
+  if [ -z "$1" ]; then
+    title "[ERROR] DB is not specified. Valid are: ['postgresql']"
+    exit 0
+  fi
 
-	if [ "$2" == "postgresql" ]; then
-	    chef_postgresql
-	fi
+  if [ "$2" == "postgresql" ]; then
+    chef_postgresql
+  fi
 }

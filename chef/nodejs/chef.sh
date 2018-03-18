@@ -8,8 +8,8 @@
 # $1 - Node.js version
 function chef_nodejs {
 	if [ -z "$1" ]; then
-	    title "[ERROR] Node.js version is required"
-	    exit 0
+    title "[ERROR] Node.js version is required"
+    exit 0
 	fi
 
 	title "Install Node.js $1"

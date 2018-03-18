@@ -36,8 +36,8 @@ OPENDKIM_SOCKET="56371"
 APP_ENVIRONMENT=$1
 
 if [ -z "$1" ]; then
-    echo 'APP_ENVIRONMENT argument is required'
-    exit 0
+  echo 'APP_ENVIRONMENT argument is required'
+  exit 0
 fi
 
 title "Chef's Start"
@@ -65,10 +65,9 @@ if id deploy >/dev/null 2>&1; then
  	echo ""
 else
   title 'Add deploy user'
-
   sudo useradd --create-home -s /bin/bash deploy
-	sudo adduser deploy sudo
-	sudo passwd deploy
+  sudo adduser deploy sudo
+  sudo passwd deploy
 fi
 
 # ============================

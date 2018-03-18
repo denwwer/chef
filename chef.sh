@@ -12,7 +12,7 @@ function help {
 }
 
 if [ -z "$4" ]; then
-    help
+  help
 fi
 
 echo "Upload chef"
