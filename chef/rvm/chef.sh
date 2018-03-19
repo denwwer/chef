@@ -8,8 +8,8 @@
 # $1 - Ruby version
 function chef_rvm {
 	if [ -z "$1" ]; then
-	    title "[ERROR] Ruby version is required"
-	    exit 0
+    title "[ERROR] Ruby version is required"
+    exit 0
 	fi
 
 	title "Install RVM with Ruby $1"
