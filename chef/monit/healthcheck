@@ -1,9 +1,0 @@
-# Monitor Healthcheck URL of Web Application
-# Replace `example.com` to your domain
-#
-#	check host example.com with address example.com
-#		if failed
-#				port 443 type tcpSSL protocol http
-#			request "/status"
-#			for 5 times within 5 cycles
-#			then alert

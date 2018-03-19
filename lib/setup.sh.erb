@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+. ./ext/title.sh
+. ./ext/copy.sh
+
+title "Chef's Start"
+title 'Update system'
+
+sudo apt-get update -q=2
+
+title 'System updated'

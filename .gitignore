@@ -3,3 +3,5 @@
 .DS_Store
 tmp
 chef/authorized_keys
+/cookbooks
+config.yml

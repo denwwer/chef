@@ -1,0 +1,2 @@
+# Your domain here
+# mail._domainkey.mymoneymotion.com mymoneymotion.com:mail:/etc/opendkim/keys/mymoneymotion.com/mail.private
