@@ -10,7 +10,11 @@
 # $1 - OpenDKIM Socket
 # $2 - Domain name
 function chef_opendkim {
-  title 'Configure  OpenDKIM'
+	title 'Install  OpenDKIM'
+
+	sudo apt-get install -q=2 opendkim opendkim-tools
+	
+	title 'Configure  OpenDKIM'
 
 	sudo postconf -e "milter_protocol = 2"
 	sudo postconf -e "milter_default_action = accept"

@@ -43,7 +43,7 @@ title "Chef's Start"
 title "Environment $APP_ENVIRONMENT"
 title 'Update system'
 
-sudo apt-get update -q=2
+sudo apt-get upgrade -q=2
 
 title 'Install dependencies'
 
@@ -54,7 +54,7 @@ debconf-set-selections <<< "debconf debconf/frontend select Noninteractive"
 debconf-set-selections <<< "postfix postfix/mailname string $DOMAIN_NAME"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 
-sudo apt-get install -q=2 htop mc git redis-tools ufw vim nano opendkim opendkim-tools mailutils
+sudo apt-get install -q=2 htop mc git tree redis-tools ufw vim nano mailutils
 
 # for test
 sudo apt-get install -q=2 debconf-utils
@@ -79,10 +79,10 @@ chef_ssh_key
 chef_ufw
 chef_postfix
 chef_opendkim
-chef_rvm "2.5.0"
+chef_rvm "2.5.1"
 chef_nodejs "9.x"
 # Only one `chef_passenger` (Passenger include Nginx) or `chef_nginx` should be used,
-chef_passenger "https"
+chef_passenger "http"
 chef_letsencrypt "my@mail.com"
 chef_monit
 chef_logrotate

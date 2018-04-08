@@ -6,7 +6,7 @@ function help {
   echo ""
   echo "   [user@host]     - user and host for connect to remote server"
   echo "   [key.pub]       - local path to public SSH key"
-  echo "   [chef/path]     - path where save chef's on remote server"
+  echo "   [chef/path]     - path where to save chef's on remote server (usaly /root/chef)"
   echo "   [environment]   - app enviroment to use"
   exit 0
 }

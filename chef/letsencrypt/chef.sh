@@ -22,7 +22,7 @@ function chef_letsencrypt {
 
 	local www_domaim="www.$DOMAIN_NAME"
 
-	sudo certbot certonly --nginx --webroot --agree-tos --no-eff-email --email $1 -w /var/www/letsencrypt -d www_domaim -d $DOMAIN_NAME
+	sudo certbot certonly --webroot --agree-tos --no-eff-email --email $1 -w /var/www/letsencrypt -d www_domaim -d $DOMAIN_NAME
   sudo certbot renew --dry-run
 
   local croncmd="Automatic renewal LetsEncrypt"
