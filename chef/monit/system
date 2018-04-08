@@ -4,8 +4,7 @@ check device "root" with path /
 
 # System
 check system localhost
-    if loadavg (1min) > 4 then alert
-    if loadavg (5min) > 2 then alert
-    if cpu usage > 85% for 5 cycles then alert
-    if memory usage > 85% then alert
-    if swap usage > 25% then alert
+    if loadavg (5min) > 4 then alert
+    if cpu usage > 90% for 2 cycles then alert
+    if memory usage > 85% 3 cycles then alert
+    if swap usage > 20% then alert
